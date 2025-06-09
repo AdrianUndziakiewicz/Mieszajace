@@ -3,7 +3,7 @@
 
 #include "hash_table_base.h"
 
-// Hash Table z kube³kami zawieraj¹cymi drzewa AVL
+// Hash Table z kubeÂ³kami zawierajÂ¹cymi drzewa AVL
 class AVLHashTable : public HashTableBase {
 private:
     struct AVLNode {
@@ -83,7 +83,7 @@ private:
 
         update_height(node);
 
-        // SprawdŸ balans i wykonaj rotacje
+        // SprawdÅ¸ balans i wykonaj rotacje
         int balance = get_balance(node);
 
         // lewa-lewa
@@ -161,7 +161,7 @@ private:
 
         int balance = get_balance(node);
 
-        // rotacje po usuniêciu
+        // rotacje po usuniÃªciu
         if (balance > 1 && get_balance(node->left) >= 0) {
             return rotate_right(node);
         }
@@ -306,6 +306,9 @@ public:
         }
         current_size = 0;
     }
+ std::string get_name() const override {
+     return "AVL Hash Table";
+ }
 };
 
 #endif
