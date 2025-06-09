@@ -10,6 +10,7 @@
 class HashTableBase {
 public:
     virtual ~HashTableBase() = default;
+    virtual std::string get_name() const = 0;
     virtual bool insert(int key, int value) = 0;
     virtual bool remove(int key) = 0;
     virtual bool find(int key, int& value) = 0;
