@@ -128,6 +128,9 @@ public:
         }
         current_size = 0;
     }
+ std::string get_name() const override {
+     return "Open Addressing Hash Table";
+ }
 };
 
 #endif
