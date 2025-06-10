@@ -2,9 +2,10 @@
 #define CHAINING_HASH_TABLE_H
 
 #include "hash_table_base.h"
-#include <list>
+#include <vector> // Zmieniono z <list> na <vector>
 
-//  Hash Table z metodą łańcuchową (chaining)
+// Implementacja 1: Hash Table z metodą lancuchowa (chaining)
+// Ale teraz z uzyciem std::vector zamiast std::list w kazdym "kubku"
 class ChainingHashTable : public HashTableBase {
 private:
     struct KeyValue {
@@ -13,11 +14,12 @@ private:
         KeyValue(int k, int v) : key(k), value(v) {}
     };
 
-    std::vector<std::list<KeyValue>> table;
+    // Zmieniono std::list na std::vector w kazdym kubku
+    std::vector<std::vector<KeyValue>> table;
     size_t table_size;
     size_t current_size;
 
-    // Współczynnik obciążenia
+    // Wspolczynnik obciazenia
     static constexpr double MAX_LOAD_FACTOR = 0.75;
 
     void resize() {
@@ -44,34 +46,38 @@ public:
     }
 
     bool insert(int key, int value) override {
-        // Sprawdź czy trzeba zwiększyć rozmiar
+        // Sprawdz czy trzeba zwiekszyc rozmiar
         if (static_cast<double>(current_size) / table_size > MAX_LOAD_FACTOR) {
             resize();
         }
 
         size_t index = hash_function(key, table_size);
-        auto& chain = table[index];
+        auto& chain = table[index]; // Teraz to jest std::vector<KeyValue>
 
-        // Sprawdź czy klucz już istnieje
+        // Sprawdz czy klucz juz istnieje
         for (auto& kv : chain) {
             if (kv.key == key) {
-                kv.value = value; // Aktualizuj wartość
+                kv.value = value; // Aktualizuj wartosc
                 return true;
             }
         }
 
-        // Dodaj nowy element
+        // Dodaj nowy element do wektora
         chain.emplace_back(key, value);
         current_size++;
         return true;
     }
 
+
     bool remove(int key) override {
         size_t index = hash_function(key, table_size);
-        auto& chain = table[index];
+        auto& chain = table[index]; // Teraz to jest std::vector<KeyValue>
 
+        // Szukaj elementu do usuniecia w wektorze
         for (auto it = chain.begin(); it != chain.end(); ++it) {
             if (it->key == key) {
+                // Usun element z wektora. erase() dla vectora moze byc kosztowne
+                // (przenoszenie wszystkich elementow za usunietym).
                 chain.erase(it);
                 current_size--;
                 return true;
@@ -82,7 +88,7 @@ public:
 
     bool find(int key, int& value) override {
         size_t index = hash_function(key, table_size);
-        const auto& chain = table[index];
+        const auto& chain = table[index]; // Teraz to jest std::vector<KeyValue>
 
         for (const auto& kv : chain) {
             if (kv.key == key) {
@@ -94,7 +100,7 @@ public:
     }
 
     void display() override {
-        std::cout << "=== Chaining Hash Table ===" << std::endl;
+        std::cout << "=== Chaining Hash Table (using std::vector for chains) ===" << std::endl; // Zmieniono nazwe dla jasnosci
         for (size_t i = 0; i < table_size; ++i) {
             std::cout << "Bucket " << i << ": ";
             for (const auto& kv : table[i]) {
@@ -109,13 +115,14 @@ public:
 
     void clear() override {
         for (auto& chain : table) {
-            chain.clear();
+            chain.clear(); // Wyczysc kazdy wektor
         }
         current_size = 0;
     }
- std::string get_name() const override {
-     return "Chaining Hash Table";
- }
+
+    std::string get_name() const override {
+        return "Chaining Hash Table (Vector)"; // Zmieniono nazwe dla jasnosci
+    }
 };
 
 #endif // CHAINING_HASH_TABLE_H
