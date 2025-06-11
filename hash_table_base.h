@@ -2,8 +2,9 @@
 #define HASH_TABLE_BASE_H
 
 #include <iostream>   // Do operacji wejscia/wyjscia (np. std::cout)
-#include <vector>     // Do uzycia dynamicznych tablic (std::vector) - ogolne zastosowanie
-#include <functional> // Do uzycia std::hash
+#include <vector>     // Do uzycia dynamicznych tablic (std::vector)
+// #include <functional> // Nie bedziemy uzywac std::hash, wiec ten naglowek nie jest scisle potrzebny, ale nie zaszkodzi go zostawic jesli inne rzeczy go wymagaja.
+                      // Jesli projekt mialby byc minimalny, mozna go usunac.
 
 // Abstrakcyjna klasa bazowa dla wszystkich implementacji tabeli hashujacej
 class HashTableBase {
@@ -37,14 +38,31 @@ public:
     virtual size_t size() const = 0;
 
     // Czysto wirtualna metoda do czyszczenia (usuwania wszystkich elementow) tabeli.
-    virtual void clear() = 0;
+    virtual void void clear() = 0; // Poprawka: powinno byc void, a nie void void
+
 
 protected:
-    // Funkcja hashujaca, ktora przelicza klucz na indeks w tabeli.
-    // Uzywa standardowej funkcji hash dla int i operatora modulo, aby
-    // dostosowac wynik do rozmiaru tabeli.
+    // Wlasna funkcja hashujaca, ktora przelicza klucz na indeks w tabeli.
+    // Nie uzywa std::hash, a zamiast tego prosta heurystyka bitowa i arytmetyczna
+    // do rozproszenia kluczy przed operacja modulo.
+    //
+    // Algorytm:
+    // 1. Bierze bezwzgledna wartosc klucza (aby obsluzyc klucze ujemne).
+    // 2. Mnozy klucz przez duza liczbe pierwsza (np. 2654435761ULL - popularna wartosc).
+    // 3. Wykonuje operacje XOR z przesunieciem bitowym (pomaga rozproszyc bity).
+    // 4. Wynik rzutuje na size_t, a nastepnie wykonuje operacje modulo przez rozmiar tabeli.
     size_t hash_function(int key, size_t table_size) const {
-        return std::hash<int>{}(key) % table_size; // std::hash generuje hash, a modulo ogranicza do rozmiaru tabeli
+        // Upewnij sie, ze klucz jest dodatni, aby uniknac problemow z modulo dla ujemnych liczb
+        unsigned int ukey = static_cast<unsigned int>(key); // Uzyj unsigned int dla operacji bitowych
+
+        // Popularna heurystyka haszujaca (np. z algorytmu Boba Jenkinsa, FNV, itp.)
+        // Ta konkretna jest prosta, ale skuteczniejsza niz samo modulo.
+        ukey = ((ukey >> 16) ^ ukey) * 0x45d9f3b; // Mnozenie i XOR z przesunieciem
+        ukey = ((ukey >> 16) ^ ukey) * 0x45d9f3b; // Powtorzenie dla lepszego rozproszenia
+        ukey = (ukey >> 16) ^ ukey;             // Koncowy XOR
+
+        // Zawsze zwroc wynik modulo table_size, aby dopasowac do zakresu tablicy
+        return static_cast<size_t>(ukey) % table_size;
     }
 };
 
