@@ -3,8 +3,7 @@
 
 #include <iostream>   // Do operacji wejscia/wyjscia (np. std::cout)
 #include <vector>     // Do uzycia dynamicznych tablic (std::vector)
-// #include <functional> // Nie bedziemy uzywac std::hash, wiec ten naglowek nie jest scisle potrzebny, ale nie zaszkodzi go zostawic jesli inne rzeczy go wymagaja.
-                      // Jesli projekt mialby byc minimalny, mozna go usunac.
+
 
 // Abstrakcyjna klasa bazowa dla wszystkich implementacji tabeli hashujacej
 class HashTableBase {
@@ -42,10 +41,7 @@ public:
 
 
 protected:
-    // Wlasna funkcja hashujaca, ktora przelicza klucz na indeks w tabeli.
-    // Nie uzywa std::hash, a zamiast tego prosta heurystyka bitowa i arytmetyczna
-    // do rozproszenia kluczy przed operacja modulo.
-    //
+    
     // Algorytm:
     // 1. Bierze bezwzgledna wartosc klucza (aby obsluzyc klucze ujemne).
     // 2. Mnozy klucz przez duza liczbe pierwsza (np. 2654435761ULL - popularna wartosc).
