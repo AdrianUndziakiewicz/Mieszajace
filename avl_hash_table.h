@@ -51,12 +51,7 @@ private:
         }
     }
 
-    // Wykonuje rotacje w prawo na wezle 'y'. Zwraca nowy korzen poddrzewa.
-    // Przed:      y           Po:       x
-    //            / \                   / \
-    //           x   T3                T1  y
-    //          / \                       / \
-    //         T1  T2                    T2  T3
+   
     AVLNode* rotate_right(AVLNode* y) {
         AVLNode* x = y->left;
         AVLNode* T2 = x->right;
@@ -72,12 +67,7 @@ private:
         return x; // Zwraca nowy korzen
     }
 
-    // Wykonuje rotacje w lewo na wezle 'x'. Zwraca nowy korzen poddrzewa.
-    // Przed:      x           Po:       y
-    //            / \                   / \
-    //           T1  y                 x   T3
-    //              / \               / \
-    //             T2  T3            T1  T2
+ 
     AVLNode* rotate_left(AVLNode* x) {
         AVLNode* y = x->right;
         AVLNode* T2 = y->left;
