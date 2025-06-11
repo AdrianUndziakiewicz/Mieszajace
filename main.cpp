@@ -13,11 +13,7 @@
 #include "open_addressing_hash_table.h" // Implementacja z adresowaniem otwartym
 #include "avl_hash_table.h" // Implementacja z lancuchowaniem i drzewami AVL
 
-// Uwaga: Upewnij sie, ze klasy HashTableBase, ChainingHashTable, OpenAddressingHashTable,
-// i AVLHashTable sa poprawnie zdefiniowane w odpowiednich plikach .h
-// i implementuja metody insert, find, remove, size, clear oraz get_name.
-// HashTableBase powinna byc abstrakcyjna klasa bazowa z wirtualnymi funkcjami.
-// AVLHashTable powinna implementowac lancuchowanie z wykorzystaniem drzew AVL do rozwiazywania kolizji.
+
 
 class PerformanceTester {
 private:
